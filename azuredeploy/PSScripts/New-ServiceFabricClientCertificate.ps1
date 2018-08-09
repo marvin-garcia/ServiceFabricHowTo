@@ -36,7 +36,13 @@ $newCert = New-SelfSignedCertificate `
     -Verbose -ErrorAction Stop
 Export-PfxCertificate -FilePath $CertFileFullPath -Password $SecurePassword -Cert $newCert -Verbose -ErrorAction Stop
 
+Write-Host
+Write-Host "Cert local path: $($CertFileFullPath)"
+Write-Host "Certificate Thumbprint : "$NewCert.Thumbprint
+Write-Host
+
 # Add the certificate to all the VMs in the cluster.
+$cluster = Get-AzureRmServiceFabricCluster -ResourceGroupName $ClusterResourceGroupName -Name $ClusterName -Verbose -ErrorAction Stop
 switch ($CertificateType)
 {
     'Admin'
@@ -56,10 +62,3 @@ switch ($CertificateType)
             -Verbose -ErrorAction Stop
     }
 }
-
-Write-Host -ForegroundColor Yellow "Subject Name: $($newCert.Subject)"
-Write-Host -ForegroundColor Yellow "Thumbprint: $($newCert.Thumbprint)"
-
-Write-Host
-Write-Host "Cert local path: $($CertFileFullPath)"
-Write-Host "Certificate Thumbprint : "$NewCert.Thumbprint
