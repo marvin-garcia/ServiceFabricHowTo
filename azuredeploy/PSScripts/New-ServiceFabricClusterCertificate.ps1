@@ -16,7 +16,6 @@ param(
 )
 
 $SecurePassword = ConvertTo-SecureString -String $Password -AsPlainText -Force
-
 $NewCert = New-SelfSignedCertificate -CertStoreLocation Cert:\CurrentUser\My -DnsName $CertDNSName -Verbose -ErrorAction Stop
 Export-PfxCertificate -FilePath $CertFileFullPath -Password $SecurePassword -Cert $NewCert -Verbose -ErrorAction Stop
 
