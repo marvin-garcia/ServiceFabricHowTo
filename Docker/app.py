@@ -8,7 +8,6 @@ app = Flask(__name__)
 @app.route("/")
 def hello():
 
-    #path = '\\\\marvinfilesharestorage.file.core.windows.net\\mfs'
     path = str(sys.argv[1])
     filestring = 'Node name: ' + os.environ['COMPUTERNAME'] + '<br />Azure file path: ' + path + '<br />Azure files:<br />' 
     for root, dirs, files in walk(path):
