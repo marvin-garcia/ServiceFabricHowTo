@@ -10,17 +10,20 @@ ADD . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
 
-# Copy the PS script to map the network drive
-# COPY MountNetworkDrive.ps1 /app/MountNetworkDrive.ps1
+# Copy the required files
+COPY PersistAzureFileCredentials.ps1 /app/PersistAzureFileCredentials.ps1
+
+# Persistently save Azure files credentials
+# Make sure to replace the values for <storage-account-name> and <storage-account-key>
+RUN powershell.exe .\PersistAzureFileCredentials.ps1 -FileShareEndPointHost <storage-account-name>.file.core.windows.net -StorageAccountName <storage-account-name> -StorageAccountKey <storage-account-key>
+
+# Mount network drive in the container
+# Make sure to replace the values for <storage-account-name> and <file-share-name>
+RUN net use Z: \\<storage-account-name>.file.core.windows.net\<file-share-name> /persistent:yes
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
-# Define environment variable
-ENV NAME World
-
-# Mount network drive in the container
-RUN ["net.exe", "use", "Z:", "\\servicefabric3storage.file.core.windows.net\fileshare", "/u:AZURE\servicefabric3storage", "6JCcMiMQl1xP65mhGuPbU/wXeoak6MJZ7dtyFg5I7jdoAdQhmjq5LNYTqqQiGBFA4qubnWWDZcIGoGSsJ60xQg=="]
-
 # Run app.py when the container launches
-CMD ["python", "app.py"]
+# Make sure to replace the values for <storage-account-name> and <file-share-name>
+CMD python app.py \\<storage-account-name>.file.core.windows.net\<file-share-name>
