@@ -16,7 +16,7 @@
     <Policies>
       <ContainerHostPolicies CodePackageRef="Code">
         <!-- See https://aka.ms/I7z0p9 for how to encrypt your repository password -->
-        <RepositoryCredentials AccountName="MarvACR" Password="I=pAGzRpHF3ru4r95VT2PTB6OsX+I1wx" PasswordEncrypted="false" />
+        <RepositoryCredentials AccountName="acr-username" Password="acr-password" PasswordEncrypted="false" />
         <PortBinding ContainerPort="80" EndpointRef="HelloWorldPythonTypeEndpoint" />
       </ContainerHostPolicies>
     </Policies>

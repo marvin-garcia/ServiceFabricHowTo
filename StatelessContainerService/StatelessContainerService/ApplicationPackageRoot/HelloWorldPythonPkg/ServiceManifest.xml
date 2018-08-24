@@ -15,7 +15,7 @@
     <EntryPoint>
       <!-- Follow this link for more information about deploying Windows containers to Service Fabric: https://aka.ms/sfguestcontainers -->
       <ContainerHost>
-        <ImageName>marvacr.azurecr.io/helloworld-winpython:1</ImageName>
+        <ImageName>login-server/image-name:image-version</ImageName>
       </ContainerHost>
     </EntryPoint>
     <!-- Pass environment variables to your container: -->
@@ -35,7 +35,7 @@
       <!-- This endpoint is used by the communication listener to obtain the port on which to 
            listen. Please note that if your service is partitioned, this port is shared with 
            replicas of different partitions that are placed in your code. -->
-      <Endpoint Name="HelloWorldPythonTypeEndpoint" Port="8080" />
+      <Endpoint Name="HelloWorldPythonTypeEndpoint" Port="8081" UriScheme="http" Protocol="http" />
     </Endpoints>
   </Resources>
 </ServiceManifest>
