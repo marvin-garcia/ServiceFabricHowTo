@@ -20,10 +20,7 @@
                                     AzureActiveDirectory="true"
                                     ServerCertThumbprint="0123456789012345678901234567890123456789" />
   -->
-  <ClusterConnectionParameters ConnectionEndpoint="marvincluster.southcentralus.cloudapp.azure.com:19000" X509Credential="true" ServerCertThumbprint="B58393C1E44A00FDAFD083408C58EA3CBD84055A" FindType="FindByThumbprint" FindValue="4EF87A8F58DBE698C89483598728A5043EE3280D" StoreLocation="CurrentUser" StoreName="My" />
+  <ClusterConnectionParameters ConnectionEndpoint="" />
   <ApplicationParameterFile Path="..\ApplicationParameters\Cloud.xml" />
   <CopyPackageParameters CompressPackage="true" />
-  <UpgradeDeployment Mode="Monitored" Enabled="false">
-    <Parameters FailureAction="Rollback" Force="True" />
-  </UpgradeDeployment>
 </PublishProfile>
