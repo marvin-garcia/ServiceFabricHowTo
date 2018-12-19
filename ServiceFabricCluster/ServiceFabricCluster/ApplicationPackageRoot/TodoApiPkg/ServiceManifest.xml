@@ -7,7 +7,7 @@
   <ServiceTypes>
     <!-- This is the name of your ServiceType.
          The UseImplicitHost attribute indicates this is a guest service. -->
-    <StatelessServiceType ServiceTypeName="TodoApiType" UseImplicitHost="true" />
+    <StatefulServiceType ServiceTypeName="TodoApiType" HasPersistedState="true" />
   </ServiceTypes>
 
   <!-- Code package is your service executable. -->

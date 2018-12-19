@@ -6,7 +6,9 @@
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Parameters>
     <Parameter Name="TodoWeb_InstanceCount" DefaultValue="-1" />
-    <Parameter Name="TodoApi_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="TodoApi_MinReplicaSetSize" DefaultValue="1" />
+    <Parameter Name="TodoApi_PartitionCount" DefaultValue="1" />
+    <Parameter Name="TodoApi_TargetReplicaSetSize" DefaultValue="3" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -44,10 +46,54 @@
         <SingletonPartition />
       </StatelessService>
     </Service>
-    <Service Name="TodoApi" ServicePackageActivationMode="ExclusiveProcess">
-      <StatelessService ServiceTypeName="TodoApiType" InstanceCount="[TodoApi_InstanceCount]">
-        <SingletonPartition />
-      </StatelessService>
+    <Service Name="TodoApi">
+      <StatefulService ServiceTypeName="TodoApiType" TargetReplicaSetSize="[TodoApi_TargetReplicaSetSize]" MinReplicaSetSize="[TodoApi_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[TodoApi_PartitionCount]" LowKey="0" HighKey="25" />
+      </StatefulService>
     </Service>
   </DefaultServices>
+  <Principals>
+    <!-- Declare a set of groups as security principals, which can be referenced in policies. Groups are useful if there are multiple users 
+    for different service entry points and they need to have certain common privileges that are available at the group level. -->
+    <Groups>
+      <!-- Create a group that has administrator privileges. -->
+      <Group Name="LocalAdminGroup">
+        <Membership>
+          <SystemGroup Name="Administrators" />
+        </Membership>
+      </Group>
+    </Groups>
+    <Users>
+      <!-- Declare a user and add the user to the Administrators system group. The SetupAdminUser account is used to run the 
+      setup entry point of the VotingWebPkg code package (described in the preceding Policies section).-->
+      <User Name="SetupAdminUser">
+        <MemberOf>
+          <SystemGroup Name="Administrators" />
+        </MemberOf>
+      </User>
+      <!-- Create a user. Local user accounts are created on the machines where the application is deployed. By default, these accounts 
+      do not have the same names as those specified here. Instead, they are dynamically generated and have random passwords. -->
+      <User Name="AppUser1" >
+        <MemberOf>
+          <!-- Add the user to the local administrators group.-->
+          <Group NameRef="LocalAdminGroup" />
+        </MemberOf>
+      </User>
+      <!-- Create a user as a local user with the specified account name and password. Local user accounts are created on the machines 
+      where the application is deployed. -->
+      <!--<User Name="AppUser2" AccountType="LocalUser" AccountName="AppUser1" Password="Passw0rd!">
+        <MemberOf>
+          <Group NameRef="LocalAdminGroup" />
+        </MemberOf>
+      </User>-->
+      <!-- Create a user as NetworkService. -->
+      <User Name="DefaultAccount" AccountType="NetworkService" />
+    </Users>
+  </Principals>
+  <!-- Policies applied at the application level. -->
+  <Policies>
+    <!-- Specify a default user account for all code packages that don’t have a specific RunAsPolicy defined in 
+    the ServiceManifestImport section(s). -->
+    <DefaultRunAsPolicy UserRef="DefaultAccount" />
+  </Policies>
 </ApplicationManifest>
