@@ -6,7 +6,7 @@
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Parameters>
     <Parameter Name="TodoWeb_InstanceCount" DefaultValue="-1" />
-    <Parameter Name="TodoApi_MinReplicaSetSize" DefaultValue="1" />
+    <Parameter Name="TodoApi_MinReplicaSetSize" DefaultValue="3" />
     <Parameter Name="TodoApi_PartitionCount" DefaultValue="1" />
     <Parameter Name="TodoApi_TargetReplicaSetSize" DefaultValue="3" />
   </Parameters>
