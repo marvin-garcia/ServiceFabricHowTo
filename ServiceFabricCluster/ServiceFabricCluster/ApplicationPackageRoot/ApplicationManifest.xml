@@ -6,10 +6,12 @@
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Parameters>
     <Parameter Name="TodoWeb_InstanceCount" DefaultValue="-1" />
-    <Parameter Name="TodoApi_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="TodoApi_InstanceCount" DefaultValue="-1" />
+    <!--<Parameter Name="TodoApi_MinReplicaSetSize" DefaultValue="3" />
     <Parameter Name="TodoApi_PartitionCount" DefaultValue="1" />
-    <Parameter Name="TodoApi_TargetReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="TodoApi_TargetReplicaSetSize" DefaultValue="3" />-->
   </Parameters>
+  
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
        ServiceManifest.xml file. -->
@@ -44,12 +46,14 @@
     <Service Name="TodoWeb" ServicePackageActivationMode="ExclusiveProcess">
       <StatelessService ServiceTypeName="TodoWebType" InstanceCount="[TodoWeb_InstanceCount]">
         <SingletonPartition />
+        <PlacementConstraints>(NodeTypeName==Frontend)</PlacementConstraints>
       </StatelessService>
     </Service>
     <Service Name="TodoApi">
-      <StatefulService ServiceTypeName="TodoApiType" TargetReplicaSetSize="[TodoApi_TargetReplicaSetSize]" MinReplicaSetSize="[TodoApi_MinReplicaSetSize]">
-        <UniformInt64Partition PartitionCount="[TodoApi_PartitionCount]" LowKey="0" HighKey="25" />
-      </StatefulService>
+      <StatelessService ServiceTypeName="TodoApiType" InstanceCount="[TodoApi_InstanceCount]">
+        <SingletonPartition />
+        <PlacementConstraints>(NodeTypeName==Backend)</PlacementConstraints>
+      </StatelessService>
     </Service>
   </DefaultServices>
   <Principals>

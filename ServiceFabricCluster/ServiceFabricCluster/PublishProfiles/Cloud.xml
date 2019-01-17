@@ -20,11 +20,11 @@
                                     AzureActiveDirectory="true"
                                     ServerCertThumbprint="0123456789012345678901234567890123456789" />
   -->
-  <ClusterConnectionParameters ConnectionEndpoint="statefulservicetest.southcentralus.cloudapp.azure.com:19000"
+  <ClusterConnectionParameters ConnectionEndpoint="marvsfcluster.southcentralus.cloudapp.azure.com:19000"
                                     X509Credential="true"
-                                    ServerCertThumbprint="58EFBEB41C6317423846C4F7E715F258A9F1E5AC"
+                                    ServerCertThumbprint="FB86B0F6C5051F2ED425184DE75C203C23B94B76"
                                     FindType="FindByThumbprint"
-                                    FindValue="58EFBEB41C6317423846C4F7E715F258A9F1E5AC"
+                                    FindValue="FB86B0F6C5051F2ED425184DE75C203C23B94B76"
                                     StoreLocation="CurrentUser"
                                     StoreName="My" />
   <ApplicationParameterFile Path="..\ApplicationParameters\Cloud.xml" />
