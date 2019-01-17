@@ -1,7 +1,8 @@
-﻿Function New-SerficeFabricClusterCertificate
+﻿Function New-ServiceFabricClusterCertificate
 {
     Param(
         [String]$Password,
+        [String]$ResourceGroupName,
         [String]$KeyVaultName,
         [String]$ClusterName,
         [String]$CertName = $ClusterName + "ClusterCert",
@@ -11,8 +12,18 @@
         [String]$CertStoreLocation = "Cert:\CurrentUser\My"
     )
 
-    $CertFileFullPath = [System.IO.Path]::Combine($PFXFileLocation, + "$($ClusterName)-Cluster-Cert.pfx")
+    $CertFileFullPath = [System.IO.Path]::Combine($PFXFileLocation, "$($ClusterName)-Cluster-Cert.pfx")
     
+    # Create resource group if does not exist
+    New-AzureRmResourceGroup -Name $ResourceGroupName -Location $location -Force -ErrorAction Stop
+
+    # Create key vault if does not exist
+    $KeyVault = Get-AzureRmKeyVault -ResourceGroupName $ResourceGroupName -VaultName $KeyVaultName -ErrorAction SilentlyContinue
+    if (!$KeyVault)
+    {
+        New-AzureRmKeyVault -ResourceGroupName $ResourceGroupName -Name $KeyVaultName -Location $location -EnabledForDeployment -EnabledForTemplateDeployment -Sku Standard -ErrorAction Stop
+    }
+
     #Create the cluster key
     $SecurePassword = ConvertTo-SecureString -String $Password -AsPlainText -Force
     $NewCert = New-SelfSignedCertificate -CertStoreLocation $CertStoreLocation -DnsName $CertDNSName -Verbose -ErrorAction Stop
