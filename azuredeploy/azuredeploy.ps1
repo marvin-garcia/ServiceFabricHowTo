@@ -12,8 +12,10 @@ $parameters = @{
     "certificateUrlValue" = "https://svcfabricservicevault.vault.azure.net/secrets/statefulservicetestClusterCert/f18f5a20328b4057ba035646fb18a6e3"
     "clientCertificateCommonName" = "CN=statefulservicetest.southcentralus.cloudapp.azure.com"
     "clientCertificateThumbprint" = "58EFBEB41C6317423846C4F7E715F258A9F1E5AC"
+    "reverseProxyCertificateThumbprint" = "58EFBEB41C6317423846C4F7E715F258A9F1E5AC"
+    "reverseProxyCertificateStoreName" = "My"
     "vmNodeType0Name" = "Bronze"
-    "vmNodeType0Size" = "Standard_DS3_v2"
+    "vmNodeType0Size" = "Standard_DS2_v3"
 }
 
 $template = "C:\Users\magar\source\repos\ServiceFabricHowTo\azuredeploy\azuredeploy-sf-1709-custom-docker-root-dir.json"

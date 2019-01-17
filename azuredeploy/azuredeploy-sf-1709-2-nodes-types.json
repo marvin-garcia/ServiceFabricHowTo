@@ -89,6 +89,36 @@
             "type": "string",
             "defaultValue": "latest"
         },
+        "nt0Name": {
+            "type": "string",
+            "maxLength": 9,
+            "metadata": {
+                "description": "Node type 0 name"
+            }
+        },
+        "nt0NodeSize": {
+            "type": "string",
+            "defaultValue": "Standard_DS1_v2"
+        },
+        "nt0InstanceCount": {
+            "type": "int",
+            "defaultValue": 3,
+            "metadata": {
+                "description": "Instance count for node type"
+            }
+        },
+        "nt0DurabilityLevel": {
+            "type": "string",
+            "defaultValue": "Bronze",
+            "allowedValues": [
+                "Bronze",
+                "Silver",
+                "Gold"
+              ],
+              "metadata": {
+                "description": "Durability level for node type 0"
+            }
+        },
         "nt0applicationStartPort": {
             "type": "int",
             "defaultValue": 20000
@@ -113,21 +143,21 @@
             "type": "int",
             "defaultValue": 19080
         },
-        "loadBalancedAppPort1": {
+        "nt0LoadBalancedAppPort1": {
             "type": "int",
             "defaultValue": 80,
             "metadata": {
                 "description": "Input endpoint1 for the application to use. Replace it with what your application uses"
             }
         },
-        "loadBalancedAppPort2": {
+        "nt0LoadBalancedAppPort2": {
             "type": "int",
             "defaultValue": 8000,
             "metadata": {
                 "description": "Input endpoint2 for the application to use. Replace it with what your application uses"
             }
         },
-        "loadBalancedAppPort3": {
+        "nt0LoadBalancedAppPort3": {
             "type": "int",
             "defaultValue": 8080,
             "metadata": {
@@ -231,33 +261,6 @@
                 "description": "Name for the storage account that contains application diagnostics data from the cluster"
             }
         },
-        "nt0InstanceCount": {
-            "type": "int",
-            "defaultValue": 3,
-            "metadata": {
-                "description": "Instance count for node type"
-            }
-        },
-        "vmNodeType0Name": {
-            "type": "string",
-            "maxLength": 9
-        },
-        "vmNodeType0Size": {
-            "type": "string",
-            "defaultValue": "Standard_DS1_v2"
-        },
-        "vmNodeTypeDurabilityLevel": {
-            "type": "string",
-            "defaultValue": "Bronze",
-            "allowedValues": [
-                "Bronze",
-                "Silver",
-                "Gold"
-              ],
-              "metadata": {
-                "description": "Durability level for the nodes"
-            }
-        },
         "clusterReliabilityLevel": {
             "type": "string",
             "defaultValue": "Bronze",
@@ -305,13 +308,12 @@
         "publicIPApiVersion": "2015-06-15",
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
         "subnet0Ref": "[concat(variables('vnetID'),'/subnets/',parameters('subnet0Name'))]",
-        "lbID0": "[resourceId('Microsoft.Network/loadBalancers', concat('LB','-', parameters('clusterName'),'-',parameters('vmNodeType0Name')))]",
+        "lbID0": "[resourceId('Microsoft.Network/loadBalancers', concat('LB','-', parameters('clusterName'),'-',parameters('nt0Name')))]",
         "lbIPConfig0": "[concat(variables('lbID0'),'/frontendIPConfigurations/LoadBalancerIPConfig')]",
         "lbPoolID0": "[concat(variables('lbID0'),'/backendAddressPools/LoadBalancerBEAddressPool')]",
         "lbProbeID0": "[concat(variables('lbID0'),'/probes/FabricGatewayProbe')]",
         "lbHttpProbeID0": "[concat(variables('lbID0'),'/probes/FabricHttpGatewayProbe')]",
-        "lbNatPoolID0": "[concat(variables('lbID0'),'/inboundNatPools/LoadBalancerBEAddressNatPool')]",
-        "vmStorageAccountName0": "[toLower(concat(uniqueString(resourceGroup().id), '1', '0' ))]"
+        "lbNatPoolID0": "[concat(variables('lbID0'),'/inboundNatPools/LoadBalancerBEAddressNatPool')]"
     },
     "resources": [
         {
@@ -391,7 +393,7 @@
         {
             "apiVersion": "[variables('lbApiVersion')]",
             "type": "Microsoft.Network/loadBalancers",
-            "name": "[concat('LB','-', parameters('clusterName'),'-',parameters('vmNodeType0Name'))]",
+            "name": "[concat('LB','-', parameters('clusterName'),'-',parameters('nt0Name'))]",
             "location": "[parameters('computeLocation')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/publicIPAddresses/',concat(parameters('lbIPName'),'-','0'))]"
@@ -458,12 +460,12 @@
                             "backendAddressPool": {
                                 "id": "[variables('lbPoolID0')]"
                             },
-                            "backendPort": "[parameters('loadBalancedAppPort1')]",
+                            "backendPort": "[parameters('nt0LoadBalancedAppPort1')]",
                             "enableFloatingIP": "false",
                             "frontendIPConfiguration": {
                                 "id": "[variables('lbIPConfig0')]"
                             },
-                            "frontendPort": "[parameters('loadBalancedAppPort1')]",
+                            "frontendPort": "[parameters('nt0LoadBalancedAppPort1')]",
                             "idleTimeoutInMinutes": "5",
                             "probe": {
                                 "id": "[concat(variables('lbID0'),'/probes/AppPortProbe1')]"
@@ -477,12 +479,12 @@
                             "backendAddressPool": {
                                 "id": "[variables('lbPoolID0')]"
                             },
-                            "backendPort": "[parameters('loadBalancedAppPort2')]",
+                            "backendPort": "[parameters('nt0LoadBalancedAppPort2')]",
                             "enableFloatingIP": "false",
                             "frontendIPConfiguration": {
                                 "id": "[variables('lbIPConfig0')]"
                             },
-                            "frontendPort": "[parameters('loadBalancedAppPort2')]",
+                            "frontendPort": "[parameters('nt0LoadBalancedAppPort2')]",
                             "idleTimeoutInMinutes": "5",
                             "probe": {
                                 "id": "[concat(variables('lbID0'),'/probes/AppPortProbe2')]"
@@ -496,12 +498,12 @@
                             "backendAddressPool": {
                                 "id": "[variables('lbPoolID0')]"
                             },
-                            "backendPort": "[parameters('loadBalancedAppPort3')]",
+                            "backendPort": "[parameters('nt0LoadBalancedAppPort3')]",
                             "enableFloatingIP": "false",
                             "frontendIPConfiguration": {
                                 "id": "[variables('lbIPConfig0')]"
                             },
-                            "frontendPort": "[parameters('loadBalancedAppPort3')]",
+                            "frontendPort": "[parameters('nt0LoadBalancedAppPort3')]",
                             "idleTimeoutInMinutes": "5",
                             "probe": {
                                 "id": "[concat(variables('lbID0'),'/probes/AppPortProbe3')]"
@@ -534,7 +536,7 @@
                         "properties": {
                             "intervalInSeconds": 5,
                             "numberOfProbes": 2,
-                            "port": "[parameters('loadBalancedAppPort1')]",
+                            "port": "[parameters('nt0LoadBalancedAppPort1')]",
                             "protocol": "tcp"
                         }
                     },
@@ -543,7 +545,7 @@
                         "properties": {
                             "intervalInSeconds": 5,
                             "numberOfProbes": 2,
-                            "port": "[parameters('loadBalancedAppPort2')]",
+                            "port": "[parameters('nt0LoadBalancedAppPort2')]",
                             "protocol": "tcp"
                         }
                     },
@@ -552,7 +554,7 @@
                         "properties": {
                             "intervalInSeconds": 5,
                             "numberOfProbes": 2,
-                            "port": "[parameters('loadBalancedAppPort3')]",
+                            "port": "[parameters('nt0LoadBalancedAppPort3')]",
                             "protocol": "tcp"
                         }
                     }
@@ -580,11 +582,11 @@
         {
             "apiVersion": "[variables('vmssApiVersion')]",
             "type": "Microsoft.Compute/virtualMachineScaleSets",
-            "name": "[parameters('vmNodeType0Name')]",
+            "name": "[parameters('nt0Name')]",
             "location": "[parameters('computeLocation')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
-                "[concat('Microsoft.Network/loadBalancers/', concat('LB','-', parameters('clusterName'),'-',parameters('vmNodeType0Name')))]",
+                "[concat('Microsoft.Network/loadBalancers/', concat('LB','-', parameters('clusterName'),'-',parameters('nt0Name')))]",
                 "[concat('Microsoft.Storage/storageAccounts/', parameters('supportLogStorageAccountName'))]",
                 "[concat('Microsoft.Storage/storageAccounts/', parameters('applicationDiagnosticsStorageAccountName'))]"
             ],
@@ -597,7 +599,7 @@
                     "extensionProfile": {
                         "extensions": [
                             {
-                                "name": "[concat(parameters('vmNodeType0Name'),'_ServiceFabricNode')]",
+                                "name": "[concat(parameters('nt0Name'),'_ServiceFabricNode')]",
                                 "properties": {
                                     "type": "ServiceFabricNode",
                                     "autoUpgradeMinorVersion": true,
@@ -608,9 +610,9 @@
                                     "publisher": "Microsoft.Azure.ServiceFabric",
                                     "settings": {
                                         "clusterEndpoint": "[reference(parameters('clusterName')).clusterEndpoint]",
-                                        "nodeTypeRef": "[parameters('vmNodeType0Name')]",
+                                        "nodeTypeRef": "[parameters('nt0Name')]",
                                         "dataPath": "D:\\\\SvcFab",
-                                        "durabilityLevel": "[parameters('vmNodeTypeDurabilityLevel')]",
+                                        "durabilityLevel": "[parameters('nt0DurabilityLevel')]",
                                         "enableParallelJobs": true,
                                         "nicPrefixOverride": "[parameters('subnet0Prefix')]",
                                         "certificate": {
@@ -622,7 +624,7 @@
                                 }
                             },
                             {
-                                "name": "[concat('VMDiagnosticsVmExt','_vmNodeType0Name')]",
+                                "name": "[concat('VMDiagnosticsVmExt','_nt0Name')]",
                                 "properties": {
                                     "type": "IaaSDiagnostics",
                                     "autoUpgradeMinorVersion": true,
@@ -723,7 +725,7 @@
                     "osProfile": {
                         "adminPassword": "[parameters('adminPassword')]",
                         "adminUsername": "[parameters('adminUsername')]",
-                        "computernamePrefix": "[parameters('vmNodeType0Name')]",
+                        "computernamePrefix": "[parameters('nt0Name')]",
                         "secrets": [
                             {
                                 "sourceVault": {
@@ -767,7 +769,7 @@
                 }
             },
             "sku": {
-                "name": "[parameters('vmNodeType0Size')]",
+                "name": "[parameters('nt0NodeSize')]",
                 "capacity": "[parameters('nt0InstanceCount')]",
                 "tier": "Standard"
             },
@@ -885,14 +887,14 @@
                 "managementEndpoint": "[concat('https://',reference(concat(parameters('lbIPName'),'-','0')).dnsSettings.fqdn,':',parameters('nt0fabricHttpGatewayPort'))]",
                 "nodeTypes": [
                     {
-                        "name": "[parameters('vmNodeType0Name')]",
+                        "name": "[parameters('nt0Name')]",
                         "applicationPorts": {
                             "endPort": "[parameters('nt0applicationEndPort')]",
                             "startPort": "[parameters('nt0applicationStartPort')]"
                         },
                         "clientConnectionEndpointPort": "[parameters('nt0fabricTcpGatewayPort')]",
                         "reverseProxyEndpointPort": "[parameters('SFReverseProxyPort')]",
-                        "durabilityLevel": "[parameters('vmNodeTypeDurabilityLevel')]",
+                        "durabilityLevel": "[parameters('nt0DurabilityLevel')]",
                         "ephemeralPorts": {
                             "endPort": "[parameters('nt0ephemeralEndPort')]",
                             "startPort": "[parameters('nt0ephemeralStartPort')]"
