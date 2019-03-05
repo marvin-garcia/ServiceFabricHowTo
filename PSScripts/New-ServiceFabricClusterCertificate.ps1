@@ -5,14 +5,14 @@
         [String]$ResourceGroupName,
         [String]$KeyVaultName,
         [String]$ClusterName,
-        [String]$CertName = $ClusterName + "ClusterCert",
+        [String]$CertName,
         [String]$location,
         [String]$CertDNSName = $ClusterName + "." + $location + ".cloudapp.azure.com",
         [String]$PFXFileLocation,
         [String]$CertStoreLocation = "Cert:\CurrentUser\My"
     )
 
-    $CertFileFullPath = [System.IO.Path]::Combine($PFXFileLocation, "$($ClusterName)-Cluster-Cert.pfx")
+    $CertFileFullPath = [System.IO.Path]::Combine($PFXFileLocation, $CertName)
     
     # Create resource group if does not exist
     New-AzureRmResourceGroup -Name $ResourceGroupName -Location $location -Force -ErrorAction Stop
@@ -50,6 +50,7 @@
     Write-Host "Cert Thumbprint : $($NewCert.Thumbprint)"
     Write-Host "Cert URL : $($VaultCert.Id)"
     Write-Host "Secret URL: $($VaultCert.SecretId)"
+    Write-Host "Key Vault Id: $($KeyVault.Id)"
 
     return
 }
