@@ -19,6 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickApp", "src\QuickApp\Qu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "src\DAL\DAL.csproj", "{C4C99D7C-0A91-418A-AE87-FD4EE43892D8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{2C83592E-3D77-47EF-B3E0-E2A176CBFC52}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NodeJS", "NodeJS", "{F259DD21-5E59-497E-B1C6-B678C407DB81}"
+	ProjectSection(SolutionItems) = preProject
+		Docker\NodeJS\Dockerfile = Docker\NodeJS\Dockerfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +47,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4B467D5D-FA6F-412E-8B45-45BF0630180C} = {17070A46-661F-4A01-8B84-CE9C59173779}
 		{C4C99D7C-0A91-418A-AE87-FD4EE43892D8} = {17070A46-661F-4A01-8B84-CE9C59173779}
+		{2C83592E-3D77-47EF-B3E0-E2A176CBFC52} = {15E38D17-ECED-49D4-A161-38EC79E795E9}
+		{F259DD21-5E59-497E-B1C6-B678C407DB81} = {2C83592E-3D77-47EF-B3E0-E2A176CBFC52}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {46C86587-3EE9-4CF2-966A-9160EF864A31}

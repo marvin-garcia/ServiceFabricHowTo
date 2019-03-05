@@ -1,26 +1,12 @@
-# escape=`
-
-FROM mcr.microsoft.com/windows/servercore:1709 AS installer-env
-
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
-
-ENV NODE_VERSION 10.15.2
-
-RUN Invoke-WebRequest https://nodejs.org/dist/v$env:NODE_VERSION/node-v$env:NODE_VERSION-win-x64.zip -OutFile nodejs.zip; `
-    Expand-Archive nodejs.zip -DestinationPath nodejs; `
-    Remove-Item -Force nodejs.zip
+#Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
+#For more information, please see https://aka.ms/containercompat
 
 FROM microsoft/dotnet:2.1-aspnetcore-runtime-nanoserver-1709 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM microsoft/dotnet:2.1-sdk-nanoserver-1709 AS build
-
-COPY --from=installer-env ["nodejs", "C:\\Program Files\\nodejs"]
-
+FROM marvacr.azurecr.io/dotnet:2.1-sdk-nanoserver-1709-nodejs AS build
 WORKDIR /src
-
-# Copy files
 COPY ["src/QuickApp/QuickApp.csproj", "src/QuickApp/"]
 COPY ["src/DAL/DAL.csproj", "src/DAL/"]
 RUN dotnet restore "src/QuickApp/QuickApp.csproj"
@@ -33,6 +19,5 @@ RUN dotnet publish "QuickApp.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /nodejs /nodejs
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "QuickApp.dll"]

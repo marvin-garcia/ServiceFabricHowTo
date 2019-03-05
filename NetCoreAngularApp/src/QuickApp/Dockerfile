@@ -5,7 +5,7 @@ FROM microsoft/dotnet:2.1-aspnetcore-runtime-nanoserver-1709 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM microsoft/dotnet:2.1-sdk-nanoserver-1709 AS build
+FROM marvacr.azurecr.io/dotnet:2.1-sdk-nanoserver-1709-nodejs AS build
 WORKDIR /src
 COPY ["src/QuickApp/QuickApp.csproj", "src/QuickApp/"]
 COPY ["src/DAL/DAL.csproj", "src/DAL/"]
